@@ -1,0 +1,701 @@
+
+/* =================================
+   KNOWCAP - PROFESSIONAL UI DESIGN
+================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 25px;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f6fc;
+    color: #202943;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #111936, #202d5c);
+    color: white;
+    padding: 32px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    box-shadow: 5px 0 25px rgba(20, 30, 70, 0.12);
+}
+
+.sidebar h2 {
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+}
+
+.sidebar p {
+    color: #aab8e8;
+    font-size: 13px;
+    margin-bottom: 42px;
+}
+
+nav a {
+    display: block;
+    color: #cbd5ed;
+    text-decoration: none;
+    padding: 14px 15px;
+    margin: 9px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+nav a:hover,
+nav a.active {
+    background: linear-gradient(90deg, #4268dc, #6956d9);
+    color: white;
+    transform: translateX(4px);
+}
+
+/* MAIN CONTENT */
+
+main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 38px;
+    max-width: 1600px;
+}
+
+header {
+    margin-bottom: 32px;
+}
+
+header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #172554;
+    margin-bottom: 9px;
+}
+
+header p {
+    color: #71809b;
+    font-size: 15px;
+}
+
+/* DASHBOARD CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 30px;
+}
+
+.card {
+    position: relative;
+    overflow: hidden;
+    background: white;
+    padding: 27px;
+    border-radius: 16px;
+    border: 1px solid #edf0f8;
+    box-shadow: 0 5px 20px rgba(35, 50, 100, 0.05);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(35, 50, 100, 0.10);
+}
+
+.card h3 {
+    color: #78849d;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 17px;
+}
+
+.card h2 {
+    color: #385bd5;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+/* PANELS */
+
+.panel {
+    background: white;
+    padding: 30px;
+    border-radius: 17px;
+    border: 1px solid #edf0f8;
+    box-shadow: 0 5px 22px rgba(35, 50, 100, 0.045);
+    margin-bottom: 27px;
+    scroll-margin-top: 20px;
+}
+
+.panel h2 {
+    color: #1d2b50;
+    font-size: 21px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.panel p {
+    color: #7a879f;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+/* FORMS */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #dfe5f1;
+    border-radius: 10px;
+    background: #fbfcff;
+    color: #263451;
+    font-size: 14px;
+    transition: 0.25s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #526de0;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(82, 109, 224, 0.10);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #a0a9bb;
+}
+
+textarea {
+    min-height: 115px;
+    resize: vertical;
+}
+
+/* BUTTONS */
+
+button {
+    width: fit-content;
+    padding: 13px 22px;
+    background: linear-gradient(100deg, #4268dc, #6656d9);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+button:hover {
+    background: linear-gradient(100deg, #304fc0, #5141c0);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(66, 104, 220, 0.20);
+}
+
+/* INTERVIEW AND REPORT */
+
+#interviewArea,
+#reportArea,
+#taskList {
+    margin-top: 22px;
+}
+
+#interviewArea,
+#taskList {
+    line-height: 1.8;
+}
+
+#reportArea pre {
+    background: #f7f8fd;
+    border: 1px solid #e8ecf5;
+    padding: 24px;
+    border-radius: 12px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.8;
+    font-size: 14px;
+    color: #35415d;
+    margin-top: 15px;
+}
+
+/* CHECKLIST */
+
+#checklistItems {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin: 22px 0;
+}
+
+#checklistItems label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: #f8f9fe;
+    border: 1px solid #e9edf6;
+    border-radius: 10px;
+    color: #40506d;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+#checklistItems label:hover {
+    background: #f0f3ff;
+    border-color: #b8c5f5;
+}
+
+#checklistItems input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #526de0;
+    cursor: pointer;
+}
+
+#checklistProgress {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 18px;
+    background: #edf1ff;
+    color: #385bd5;
+    border-radius: 9px;
+    font-size: 15px;
+}
+
+/* TASK TRACKER */
+
+#taskForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+#taskForm button {
+    grid-column: 1 / -1;
+}
+
+#taskList > div {
+    background: #f8f9fe;
+    border: 1px solid #e7ebf5;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 13px;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f3f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b6c1df;
+    border-radius: 10px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 950px) {
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    main {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 650px) {
+    body {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+        padding: 20px;
+    }
+
+    .sidebar p {
+        margin-bottom: 18px;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    nav a {
+        margin: 3px;
+        padding: 10px;
+    }
+
+    main {
+        margin-left: 0;
+        width: 100%;
+        padding: 18px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    #taskForm {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+}
+.card-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #edf1ff;
+    border-radius: 12px;
+    font-size: 23px;
+    margin-bottom: 18px;
+}
+
+.card p {
+    color: #8a94a9;
+    font-size: 13px;
+    margin-top: 10px;
+}
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    margin: 6px 0;
+    border-radius: 10px;
+    color: #dce3ff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.sidebar nav a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+
+.sidebar nav a.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-weight: 600;
+}
+/* Handover Readiness Dashboard */
+
+.readiness-panel {
+    margin-top: 25px;
+}
+
+.readiness-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.readiness-status {
+    background: #fff3d6;
+    color: #a66b00;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.readiness-content {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-top: 25px;
+}
+
+.readiness-circle {
+    width: 115px;
+    height: 115px;
+    min-width: 115px;
+    border-radius: 50%;
+    background: conic-gradient(#6257e8 0deg, #e9eaf3 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.readiness-circle::before {
+    content: "";
+    position: absolute;
+    width: 88px;
+    height: 88px;
+    background: white;
+    border-radius: 50%;
+}
+
+.readiness-circle span {
+    position: relative;
+    font-size: 25px;
+    font-weight: 700;
+    color: #252b45;
+}
+
+.readiness-info h3 {
+    color: #252b45;
+    margin-bottom: 8px;
+}
+
+.readiness-info p {
+    color: #8490a5;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    .readiness-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* FINAL DASHBOARD CARD POLISH */
+
+.cards {
+    gap: 24px;
+}
+
+.card {
+    border-left: 4px solid #526de0;
+    min-height: 155px;
+}
+
+.card:nth-child(2) {
+    border-left-color: #16a085;
+}
+
+.card:nth-child(3) {
+    border-left-color: #e6a23c;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(35, 50, 100, 0.12);
+}
+
+.card h2 {
+    font-size: 36px;
+    letter-spacing: -1px;
+}
+
+.card-icon {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-icon {
+    transform: scale(1.08);
+}
+
+/* READINESS DASHBOARD POLISH */
+
+.readiness-panel {
+    border-top: 4px solid #6257e8;
+}
+
+.readiness-circle {
+    box-shadow: 0 5px 18px rgba(98, 87, 232, 0.12);
+}
+
+.readiness-status {
+    letter-spacing: 0.3px;
+    padding: 9px 16px;
+}
+
+.readiness-info h3 {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.readiness-info p {
+    max-width: 500px;
+}
+
+/* FINAL PROFESSIONAL UI POLISH */
+
+button {
+    border-radius: 10px;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    box-shadow: 0 4px 12px rgba(66, 104, 220, 0.12);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+input,
+textarea,
+select {
+    border-radius: 11px;
+    padding: 15px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #6257e8;
+    box-shadow: 0 0 0 4px rgba(98, 87, 232, 0.10);
+}
+
+/* REPORT SECTION */
+
+#reportArea pre {
+    border-left: 4px solid #6257e8;
+    background: #fafbff;
+    line-height: 1.9;
+}
+
+/* SMOOTH SECTION TRANSITION */
+
+.panel,
+.card {
+    transition: all 0.3s ease;
+}
+
+/* SECTION HEADING POLISH */
+
+.panel h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #edf0f8;
+}
+
+.panel p {
+    line-height: 1.8;
+}
+
+header h1 {
+    letter-spacing: -0.8px;
+}
+
+header p {
+    line-height: 1.7;
+}
+
+/* ACCESSIBILITY AND FINAL INTERACTION POLISH */
+
+button:focus-visible,
+nav a:focus-visible {
+    outline: 3px solid #9baaff;
+    outline-offset: 3px;
+}
+
+.card,
+.panel,
+button,
+nav a {
+    transition: all 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+/* DASHBOARD GRID WIDTH FIX */
+
+.cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 18px;
+}
+
+.card {
+    min-width: 0;
+}
+
+@media (max-width: 1100px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* PROFESSIONAL HANDOVER REPORT */
+
+#reportArea {
+    width: 100%;
+    margin-top: 25px;
+}
+
+#reportArea pre {
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e2e8f5;
+    border-left: 5px solid #6257e8;
+    border-radius: 14px;
+    color: #293653;
+    font-size: 14px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    box-shadow: 0 5px 18px rgba(35, 50, 100, 0.06);
+}
+
+#reportArea button {
+    margin-top: 15px;
+}

@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNOWCAP | Knowledge Transfer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>KNOWCAP</h2>
+        <p>AI Knowledge Transfer</p>
+
+        <nav>
+            <a href="#" class="active">🏠 Dashboard</a>
+<a href="#employee">👤 Employee Details</a>
+<a href="#interview">💬 Knowledge Interview</a>
+<a href="#report">📄 Handover Report</a>
+<a href="#tasks">📋 Pending Task Tracker</a>
+<a href="#checklist">✅ Handover Checklist</a>
+        </nav>
+    </div>
+
+    <main>
+        <header>
+            <div>
+                <h1>Welcome to KNOWCAP</h1>
+                <p>Preserve knowledge. Simplify handovers.</p>
+            </div>
+        </header>
+
+        <section class="cards">
+    <div class="card">
+        <div class="card-icon">📁</div>
+        <h3>Total Projects</h3>
+        <h2>0</h2>
+        <p>Projects registered</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">👥</div>
+        <h3>Knowledge Interviews</h3>
+        <h2>0</h2>
+        <p>Knowledge sessions completed</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📄</div>
+        <h3>Handover Reports</h3>
+        <h2>0</h2>
+        <p>Reports generated</p>
+    </div>
+    <div class="card">
+    <div class="card-icon">⚠️</div>
+    <h3>Knowledge Gaps</h3>
+    <h2 id="knowledgeGapCount">0</h2>
+    <p>Missing information detected</p>
+</div>
+<div class="card">
+    <div class="card-icon">🔍</div>
+    <h3>Weak Answers</h3>
+    <h2 id="weakAnswerCount">0</h2>
+    <p>Answers needing more detail</p>
+</div>
+</section>
+<section class="panel readiness-panel">
+    <div class="readiness-heading">
+        <div>
+            <h2>Handover Readiness</h2>
+            <p class="section-subtitle">
+                Track how prepared your project is for a smooth knowledge transfer.
+            </p>
+        </div>
+        <span class="readiness-status">Needs Review</span>
+    </div>
+
+    <div class="readiness-content">
+        <div class="readiness-circle">
+            <span id="readinessScore">0%</span>
+        </div>
+        <div class="readiness-info">
+            <h3>Project Readiness Score</h3>
+            <p>Complete the knowledge interview and handover checklist to improve readiness.</p>
+        </div>
+    </div>
+</section>
+        <section id="employee" class="panel">
+            <h2>Employee & Project Details</h2>
+            <p class="section-subtitle">
+    Enter employee information and project details to begin the knowledge handover process.
+</p>
+
+            <form id="employeeForm">
+                <input type="text" id="employeeName"
+                    placeholder="Employee Name" required>
+
+                <input type="text" id="employeeRole"
+                    placeholder="Employee Role" required>
+
+                <input type="text" id="projectName"
+                    placeholder="Project Name" required>
+
+                <textarea id="projectDescription"
+                    placeholder="Describe your project..." required></textarea>
+
+                <button type="submit">Save Project Details</button>
+            </form>
+        </section>
+
+        <section id="interview" class="panel">
+            <h2>Knowledge Interview</h2>
+            <p>Capture important knowledge from employees.</p>
+            <p class="section-subtitle">
+    Capture critical project knowledge, responsibilities and technical insights through a guided interview.
+</p>
+            <button onclick="startInterview()">Start Interview</button>
+            <div id="interviewArea"></div>
+        </section>
+
+        <section id="report" class="panel">
+            <h2>Handover Report</h2>
+            <p>Your project handover report will appear here.</p>
+            <p class="section-subtitle">
+    Generate and review a structured report containing project knowledge, pending tasks and handover progress.
+</p>
+            <div id="reportArea"></div>
+        </section>
+        <section id="tasks" class="panel">
+    <h2>Pending Task Tracker</h2>
+    <p>Track tasks that need to be completed before handover.</p>
+    <p class="section-subtitle">
+    Assign task owners, set deadlines and monitor pending work to ensure a smooth project transition.
+</p>
+
+    <form id="taskForm">
+        <input type="text" id="taskName"
+            placeholder="Enter task name" required>
+
+        <input type="text" id="taskOwner"
+            placeholder="Task owner" required>
+
+        <input type="date" id="taskDeadline" required>
+
+        <select id="taskPriority" required>
+            <option value="">Select Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+
+        <button type="submit">Add Task</button>
+    </form>
+
+    <div id="taskList"></div>
+</section>
+<!-- Employee Handover Checklist -->
+<section id="checklist" class="panel">
+    <h2>Employee Handover Checklist</h2>
+    <p>Verify that all important handover activities are completed.</p>
+    <p class="section-subtitle">
+    Track completion of essential handover activities and ensure no critical information is missed.
+</p>
+
+    <div id="checklistItems">
+        <label>
+            <input type="checkbox" class="handover-check">
+            Project overview documented
+        </label>
+
+        <label>
+            <input type="checkbox" class="handover-check">
+            Roles and responsibilities explained
+        </label>
+
+        <label>
+            <input type="checkbox" class="handover-check">
+            Tools and technologies documented
+        </label>
+
+        <label>
+            <input type="checkbox" class="handover-check">
+            Pending tasks assigned
+        </label>
+
+        <label>
+            <input type="checkbox" class="handover-check">
+            Known challenges explained
+        </label>
+
+        <label>
+            <input type="checkbox" class="handover-check">
+            Next steps communicated
+        </label>
+    </div>
+
+    <h3 id="checklistProgress">0 of 6 completed</h3>
+</section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
