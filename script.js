@@ -1,4 +1,78 @@
 
+// KNOWCAP Login Protection
+
+(async function checkLogin() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/auth/me",
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const data = await response.json();
+
+        localStorage.setItem("user", JSON.stringify(data.user));
+        const header = document.querySelector("header");
+
+const userInfo = document.createElement("div");
+userInfo.id = "userInfo";
+
+const userName = document.createElement("span");
+userName.textContent =
+    `${data.user.name} (${data.user.role})`;
+
+const logoutButton = document.createElement("button");
+logoutButton.textContent = "Logout";
+
+logoutButton.addEventListener("click", function () {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+});
+
+userInfo.appendChild(userName);
+userInfo.appendChild(logoutButton);
+header.appendChild(userInfo);
+// Role-Based Access Control
+
+const userRole = data.user.role;
+
+if (userRole === "admin") {
+    document.body.setAttribute("data-role", "admin");
+    console.log("Admin access granted.");
+
+} else if (userRole === "employee") {
+    document.body.setAttribute("data-role", "employee");
+    console.log("Employee access granted.");
+
+} else {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+    return;
+}
+
+    } catch (error) {
+        console.error("Authentication Error:", error);
+    }
+})();
 let projectCount = 0;
 let interviewCount = 0;
 let reportCount = 0;
@@ -6,6 +80,12 @@ let reportCount = 0;
 let projectData = JSON.parse(localStorage.getItem("projectData")) || {};
 let answers = JSON.parse(localStorage.getItem("answers")) || [];
 let currentQuestion = Number(localStorage.getItem("currentQuestion")) || 0;
+let isFollowUpQuestion =
+    localStorage.getItem("isFollowUpQuestion") === "true";
+
+let currentFollowUpQuestion =
+    localStorage.getItem("currentFollowUpQuestion") || "";
+let followUpAnswers = JSON.parse(localStorage.getItem("followUpAnswers")) || [];
 
 let questions = [
     "What is the main purpose of your project?",
@@ -118,6 +198,13 @@ function startInterview() {
     localStorage.setItem("currentQuestion", "0");
 localStorage.setItem("interviewStarted", "true");
     answers = [];
+    followUpAnswers = [];
+isFollowUpQuestion = false;
+currentFollowUpQuestion = "";
+
+localStorage.setItem("followUpAnswers", JSON.stringify(followUpAnswers));
+localStorage.setItem("isFollowUpQuestion", "false");
+localStorage.setItem("currentFollowUpQuestion", "");
 
     localStorage.setItem("answers", JSON.stringify(answers));
 
@@ -132,14 +219,23 @@ localStorage.setItem("interviewStarted", "true");
 function showQuestion() {
     const area = document.getElementById("interviewArea");
 
-    if (currentQuestion < questions.length) {
+    if (isFollowUpQuestion) {
+        area.innerHTML = `
+            <h3>Follow-up Question</h3>
+            <p>${currentFollowUpQuestion}</p>
+            <textarea id="answerInput" placeholder="Enter your answer..."></textarea>
+            <button onclick="saveAnswer()">Save Answer & Continue</button>
+        `;
+    }
+    else if (currentQuestion < questions.length) {
         area.innerHTML = `
             <h3>Question ${currentQuestion + 1} of ${questions.length}</h3>
             <p>${questions[currentQuestion]}</p>
             <textarea id="answerInput" placeholder="Enter your answer..."></textarea>
             <button onclick="saveAnswer()">Save Answer & Continue</button>
         `;
-    } else {
+    }
+    else {
         area.innerHTML = `
             <h3>Interview Completed!</h3>
             <p>All answers have been recorded.</p>
@@ -149,29 +245,104 @@ function showQuestion() {
 }
 
 // Save answers
-function saveAnswer() {
-    const answer = document.getElementById("answerInput").value.trim();
+  
+async function saveAnswer() {
+    const answerInput = document.getElementById("answerInput");
+    const answer = answerInput.value.trim();
 
     if (!answer) {
         alert("Please enter your answer.");
         return;
     }
 
-    answers.push({
-        question: questions[currentQuestion],
-        answer: answer
-    });
+    const saveButton = document.querySelector("#interviewArea button");
 
-    localStorage.setItem("answers", JSON.stringify(answers));
+    if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = "Processing...";
+    }
+
+    // Save follow-up answer
+    if (isFollowUpQuestion) {
+        followUpAnswers.push({
+            question: currentFollowUpQuestion,
+            answer: answer,
+            relatedQuestion: questions[currentQuestion]
+        });
+
+        localStorage.setItem(
+            "followUpAnswers",
+            JSON.stringify(followUpAnswers)
+        );
+
+        isFollowUpQuestion = false;
+        currentFollowUpQuestion = "";
+
+        localStorage.setItem("isFollowUpQuestion", "false");
+        localStorage.setItem("currentFollowUpQuestion", "");
+
+        currentQuestion++;
+    }
+
+    // Save original answer
+    else {
+        const originalQuestion = questions[currentQuestion];
+
+        answers.push({
+            question: originalQuestion,
+            answer: answer
+        });
+
+        localStorage.setItem("answers", JSON.stringify(answers));
+
+        // Generate follow-up for short answers
+        if (answer.length < 40) {
+            let generatedQuestion = await generateFollowUpWithAI(
+                originalQuestion,
+                answer
+            );
+
+            // Fallback if backend is unavailable
+            if (!generatedQuestion) {
+                generatedQuestion =
+                    "Can you explain this further with a practical example?";
+            }
+
+            currentFollowUpQuestion = generatedQuestion;
+            isFollowUpQuestion = true;
+
+            localStorage.setItem("isFollowUpQuestion", "true");
+            localStorage.setItem(
+                "currentFollowUpQuestion",
+                currentFollowUpQuestion
+            );
+        } else {
+            currentQuestion++;
+        }
+    }
+
     updateReadinessDisplay();
 
-    currentQuestion++;
     localStorage.setItem("currentQuestion", currentQuestion);
+
     showQuestion();
 }
 
+
 // Generate report
 function generateReport() {
+        // Load latest saved data before generating report
+    projectData = JSON.parse(localStorage.getItem("projectData")) || {};
+    answers = JSON.parse(localStorage.getItem("answers")) || [];
+    followUpAnswers = JSON.parse(localStorage.getItem("followUpAnswers")) || [];
+    tasks = JSON.parse(localStorage.getItem("knowcapTasks")) || [];
+
+    const latestChecklist =
+        JSON.parse(localStorage.getItem("knowcapChecklist")) || [];
+
+    handoverChecks.forEach((checkbox, index) => {
+        checkbox.checked = latestChecklist[index] || false;
+    });
     const getAnswer = (index) =>
         answers[index]?.answer?.trim() || "Not provided";
 
@@ -424,6 +595,14 @@ FOLLOW-UP QUESTIONS
 ${followUpQuestions.length
     ? followUpQuestions.map((item, i) => `${i + 1}. ${item}`).join("\n")
     : "No follow-up questions required."}
+    ADAPTIVE FOLLOW-UP ANSWERS
+${followUpAnswers.length
+    ? followUpAnswers.map((item, i) =>
+        `${i + 1}. Related question: ${item.relatedQuestion}
+Follow-up: ${item.question}
+Answer: ${item.answer}`
+    ).join("\n\n")
+    : "No adaptive follow-up answers recorded."}
     KNOWLEDGE GAP DETECTION
 ${knowledgeGaps.length
     ? knowledgeGaps.map((item, i) => `${i + 1}. ${item}`).join("\n")
@@ -479,6 +658,63 @@ const taskList = document.getElementById("taskList");
 function displayTasks() {
     taskList.innerHTML = "";
 
+    const today = new Date();
+    const todayString =
+        `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    // Dashboard counts
+    const total = tasks.length;
+
+    const pending = tasks.filter(
+        task => task.status === "Pending"
+    ).length;
+
+    const inProgress = tasks.filter(
+        task => task.status === "In Progress"
+    ).length;
+
+    const completed = tasks.filter(
+        task => task.status === "Completed"
+    ).length;
+
+    const overdue = tasks.filter(
+        task => task.status !== "Completed" &&
+                task.deadline < todayString
+    ).length;
+
+    document.getElementById("totalTasks").textContent = total;
+    document.getElementById("pendingTasks").textContent = pending;
+    document.getElementById("inProgressTasks").textContent = inProgress;
+    document.getElementById("completedTasks").textContent = completed;
+    document.getElementById("overdueTasks").textContent = overdue;
+
+    // Task notifications
+    const notificationArea =
+        document.getElementById("taskNotifications");
+
+    notificationArea.innerHTML = "";
+
+    tasks.forEach(task => {
+        if (task.status === "Completed") return;
+
+        const notification = document.createElement("p");
+
+        if (task.deadline < todayString) {
+            notification.textContent =
+                `⚠️ Overdue: ${task.name} (Owner: ${task.owner})`;
+            notification.style.color = "red";
+        } else if (task.deadline === todayString) {
+            notification.textContent =
+                `🔔 Due Today: ${task.name} (Owner: ${task.owner})`;
+            notification.style.color = "orange";
+        } else {
+            return;
+        }
+
+        notificationArea.appendChild(notification);
+    });
+
+    // Display tasks
     tasks.forEach((task, index) => {
         const taskItem = document.createElement("div");
         taskItem.className = "task-item";
@@ -490,33 +726,77 @@ function displayTasks() {
         details.textContent =
             `Owner: ${task.owner} | Deadline: ${task.deadline} | Priority: ${task.priority}`;
 
-        const status = document.createElement("p");
-        status.textContent = `Status: ${task.status}`;
+        // Update task status
+        const status = document.createElement("select");
 
+        ["Pending", "In Progress", "Completed"].forEach(value => {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = value;
+
+            if (task.status === value) {
+                option.selected = true;
+            }
+
+            status.appendChild(option);
+        });
+
+        status.addEventListener("change", () => {
+            tasks[index].status = status.value;
+            saveTasks();
+        });
+
+        // Deadline status
+        const deadlineStatus = document.createElement("p");
+
+        if (
+            task.status !== "Completed" &&
+            task.deadline < todayString
+        ) {
+            deadlineStatus.textContent = "Deadline Status: Overdue";
+            deadlineStatus.style.color = "red";
+        } else {
+            deadlineStatus.textContent = "Deadline Status: On Track";
+        }
+
+        // Mark completed button
         const statusButton = document.createElement("button");
         statusButton.textContent = "Mark Completed";
+
         statusButton.onclick = () => {
             tasks[index].status = "Completed";
             saveTasks();
         };
 
+        // Delete button
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
+
         deleteButton.onclick = () => {
             tasks.splice(index, 1);
             saveTasks();
         };
 
-        taskItem.append(name, details, status, statusButton, deleteButton);
+        taskItem.append(
+            name,
+            details,
+            status,
+            deadlineStatus,
+            statusButton,
+            deleteButton
+        );
+
         taskList.appendChild(taskItem);
     });
 }
 
+// Save tasks
 function saveTasks() {
     localStorage.setItem("knowcapTasks", JSON.stringify(tasks));
     displayTasks();
 }
 
+// Add new task
 taskForm.addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -525,7 +805,7 @@ taskForm.addEventListener("submit", function(event) {
         owner: document.getElementById("taskOwner").value,
         deadline: document.getElementById("taskDeadline").value,
         priority: document.getElementById("taskPriority").value,
-        status: "Pending"
+        status: document.getElementById("taskStatus").value
     };
 
     tasks.push(task);
@@ -534,6 +814,7 @@ taskForm.addEventListener("submit", function(event) {
 });
 
 displayTasks();
+
 // Employee Handover Checklist
 
 const handoverChecks = document.querySelectorAll(".handover-check");
@@ -569,3 +850,59 @@ function updateHandoverChecklist() {
 }
 
 updateHandoverChecklist();
+async function testBackendConnection() {
+    try {
+        const response = await fetch("http://localhost:5000/api/status");
+        const data = await response.json();
+
+        console.log(data.message);
+    } catch (error) {
+        console.log("Backend connection failed!");
+    }
+}
+
+testBackendConnection();
+async function testBackend() {
+    const status = document.getElementById("backendStatus");
+
+    try {
+        const response = await fetch("http://localhost:5000/api/status");
+        const data = await response.json();
+
+        status.textContent = data.message;
+        status.style.color = "green";
+    } catch (error) {
+        status.textContent = "Backend connection failed!";
+        status.style.color = "red";
+    }
+}
+  async function generateFollowUpWithAI(question, answer) {
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/generate-followup",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    question: question,
+                    answer: answer
+                }),
+                signal: AbortSignal.timeout(30000)
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "API request failed");
+        }
+
+        return data.followUpQuestion;
+
+    } catch (error) {
+        console.error("Follow-up API error:", error);
+        return null;
+    }
+}

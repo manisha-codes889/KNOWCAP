@@ -30,6 +30,11 @@
                 <p>Preserve knowledge. Simplify handovers.</p>
             </div>
         </header>
+        <section class="panel">
+    <h2>Backend Connection</h2>
+    <p id="backendStatus">Checking backend connection...</p>
+    <button onclick="testBackend()">Test Backend Connection</button>
+</section>
 
         <section class="cards">
     <div class="card">
@@ -149,10 +154,23 @@
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
         </select>
+        <select id="taskStatus" required>
+    <option value="Pending">Pending</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Completed">Completed</option>
+</select>
 
         <button type="submit">Add Task</button>
     </form>
 
+    <div class="task-summary">
+    <p>Total Tasks: <span id="totalTasks">0</span></p>
+    <p>Pending: <span id="pendingTasks">0</span></p>
+    <p>In Progress: <span id="inProgressTasks">0</span></p>
+    <p>Completed: <span id="completedTasks">0</span></p>
+    <p>Overdue: <span id="overdueTasks">0</span></p>
+</div>
+<div id="taskNotifications"></div>
     <div id="taskList"></div>
 </section>
 <!-- Employee Handover Checklist -->

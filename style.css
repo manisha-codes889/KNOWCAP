@@ -699,3 +699,81 @@ nav a {
 #reportArea button {
     margin-top: 15px;
 }
+/* KNOWCAP Authentication Pages */
+
+.auth-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 70px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.auth-container h1 {
+    color: #2563eb;
+    margin-bottom: 10px;
+}
+
+.auth-container h2 {
+    margin-bottom: 10px;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-container input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.auth-container button {
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.auth-container button:hover {
+    background: #1d4ed8;
+}
+
+.auth-container a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+#loginMessage,
+#registerMessage {
+    margin-top: 12px;
+}
+#userInfo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+#userInfo span {
+    font-weight: 600;
+}
+
+#userInfo button {
+    padding: 9px 18px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
